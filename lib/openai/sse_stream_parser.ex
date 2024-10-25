@@ -34,6 +34,9 @@ defmodule OpenAI.SSEStreamParser do
         {code, chunk}, acc when is_integer(code) ->
           {[], acc <> chunk}
 
+        {:header, chunk}, acc ->
+          {[chunk], acc}
+
         {:error, error}, acc ->
           {[error], acc}
       end,
