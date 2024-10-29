@@ -32,9 +32,9 @@ defmodule OpenAI.Stream do
             # We should be able to tell the difference between an error and the
             # event stream with content-type (text/event-stream), but
             # unfortunately OpenAI doesn't obey the spec.
-            %HTTPoison.AsyncHeaders{id: ^id, headers: _headers} ->
+            %HTTPoison.AsyncHeaders{id: ^id, headers: _headers} = header ->
               HTTPoison.stream_next(res)
-              {[], {code, res}}
+              {[{:header, header}], {code, res}}
 
             %HTTPoison.AsyncChunk{chunk: chunk} ->
               HTTPoison.stream_next(res)
