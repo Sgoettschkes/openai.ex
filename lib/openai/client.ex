@@ -24,26 +24,26 @@ defmodule OpenAI.Client do
 
   def handle_response(httpoison_response) do
     case httpoison_response do
-      {:ok, %HTTPoison.Response{status_code: 200, body: {:ok, body}}} ->
+      {:ok, %HTTPoison.Response{status_code: 200, body: {:ok, body}, headers: headers}} ->
         res =
           body
           |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
           |> Map.new()
 
-        {:ok, res}
+        {:ok, res, headers}
 
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body}
+      {:ok, %HTTPoison.Response{status_code: 200, body: body, headers: headers}} ->
+        {:ok, body, headers}
 
-      {:ok, %HTTPoison.Response{body: {:ok, body}}} ->
-        {:error, body}
+      {:ok, %HTTPoison.Response{body: {:ok, body}, headers: headers}} ->
+        {:error, body, headers}
 
-      {:ok, %HTTPoison.Response{body: {:error, body}}} ->
-        {:error, body}
+      {:ok, %HTTPoison.Response{body: {:error, body}, headers: headers}} ->
+        {:error, body, headers}
 
       # html error responses
-      {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
-        {:error, %{status_code: status_code, body: body}}
+      {:ok, %HTTPoison.Response{status_code: status_code, body: body, headers: headers}} ->
+        {:error, %{status_code: status_code, body: body, headers: headers}}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
