@@ -43,10 +43,10 @@ defmodule OpenAI.Client do
 
       # html error responses
       {:ok, %HTTPoison.Response{status_code: status_code, body: body, headers: headers}} ->
-        {:error, %{status_code: status_code, body: body, headers: headers}}
+        {:error, %{status_code: status_code, body: body}, headers}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
+        {:error, reason, nil}
     end
   end
 
